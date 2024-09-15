@@ -41,16 +41,16 @@ public class UsersController {
     @PostMapping("/register/new")
     public String userRegistration(@Valid Users users, Model model) {
 
-        Optional<Users> optionalUsers = usersService.getUserByEmail(users.getEmail());
-        if (optionalUsers.isPresent()) {
-            model.addAttribute("error", "Email is already in use!");
-            List<UsersType> usersTypes = usersTypeService.findAll();
-            model.addAttribute("getAllTypes", usersTypes);
-            model.addAttribute("user", new Users());
-            return "register";
-        }
+//        Optional<Users> optionalUsers = usersService.getUserByEmail(users.getEmail());
+//        if (optionalUsers.isPresent()) {
+//            model.addAttribute("error", "Email is already in use!");
+//            List<UsersType> usersTypes = usersTypeService.findAll();
+//            model.addAttribute("getAllTypes", usersTypes);
+//            model.addAttribute("user", new Users());
+//            return "register";
+//        }
         usersService.addNew(users);
-        return "dashboard";
+        return "redirect:/dashboard/";
     }
 
     @GetMapping("/login")
