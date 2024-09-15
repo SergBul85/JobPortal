@@ -38,7 +38,7 @@ public class WebSecurityConfig {
             "/*.js",
             "/*.js.map",
             "/fonts**",
-            "/favicon,ico",
+            "/favicon.ico",
             "/error",
     };
 
