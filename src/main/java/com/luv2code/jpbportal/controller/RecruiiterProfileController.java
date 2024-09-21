@@ -4,6 +4,7 @@ import com.luv2code.jpbportal.entity.RecruiterProfile;
 import com.luv2code.jpbportal.entity.Users;
 import com.luv2code.jpbportal.repository.UsersRepository;
 import com.luv2code.jpbportal.services.RecruiterProfileService;
+import com.luv2code.jpbportal.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -53,7 +54,7 @@ public class RecruiiterProfileController {
         return "recruiter_profile";
     }
 
-    @PostMapping("")
+    @PostMapping("/addNew")
     public String addNew(RecruiterProfile recruiterProfile,
                          @RequestParam("image") MultipartFile multipartFile,
                          Model model) {
@@ -74,9 +75,12 @@ public class RecruiiterProfileController {
         RecruiterProfile savedUser = recruiterProfileService.addNew(recruiterProfile);
 
         String uploadDir = "photos/recruiter/" + savedUser.getUserAccountId();
-
-        return "";
+        try {
+            FileUploadUtil.saveFIle(uploadDir, fileName, multipartFile);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "redirect:/dashboard/";
     }
-
 
 }
