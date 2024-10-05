@@ -1,6 +1,7 @@
 package com.luv2code.jpbportal.services;
 
 import com.luv2code.jpbportal.entity.JobPostActivity;
+import com.luv2code.jpbportal.entity.RecruiterJobsDto;
 import com.luv2code.jpbportal.repository.JobPostActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,9 @@ public class JobPostActivityService {
     public JobPostActivity addNew(JobPostActivity jobPostActivity) {
         return jobPostActivityRepository.save(jobPostActivity);
     }
+
+    public List<RecruiterJobsDto> getRecruiterJobs(int recruiter) {
+
+    }
+
 }
