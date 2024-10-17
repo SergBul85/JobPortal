@@ -7,14 +7,17 @@ public class RecruiterJobsDto {
     private Integer jobPostId;
     private String jobTitle;
     private JobLocation jobLocation;
-    private JobCompany jobCompanIdy;
+    private JobCompany jobCompanyId;
 
-    public RecruiterJobsDto(JobCompany jobCompanIdy, JobLocation jobLocation, String jobTitle, Integer jobPostId, Long totalCandidates) {
-        this.jobCompanIdy = jobCompanIdy;
-        this.jobLocation = jobLocation;
-        this.jobTitle = jobTitle;
-        this.jobPostId = jobPostId;
+    public RecruiterJobsDto() {
+    }
+
+    public RecruiterJobsDto(Long totalCandidates, Integer jobPostId, String jobTitle, JobLocation jobLocation, JobCompany jobCompanyId) {
         this.totalCandidates = totalCandidates;
+        this.jobPostId = jobPostId;
+        this.jobTitle = jobTitle;
+        this.jobLocation = jobLocation;
+        this.jobCompanyId = jobCompanyId;
     }
 
     public Long getTotalCandidates() {
@@ -49,14 +52,11 @@ public class RecruiterJobsDto {
         this.jobLocation = jobLocation;
     }
 
-    public JobCompany getJobCompanIdy() {
-        return jobCompanIdy;
+    public JobCompany getJobCompanyId() {
+        return jobCompanyId;
     }
 
-    public void setJobCompanIdy(JobCompany jobCompanIdy) {
-        this.jobCompanIdy = jobCompanIdy;
+    public void setJobCompanyId(JobCompany jobCompanyId) {
+        this.jobCompanyId = jobCompanyId;
     }
-
-
-
 }
