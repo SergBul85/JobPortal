@@ -2,6 +2,7 @@ package com.luv2code.jpbportal.controller;
 
 import com.luv2code.jpbportal.entity.JobSeekerProfile;
 import com.luv2code.jpbportal.entity.Skills;
+import com.luv2code.jpbportal.entity.Users;
 import com.luv2code.jpbportal.repository.UsersRepository;
 import com.luv2code.jpbportal.services.JobSeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/job-seeker-profile")
@@ -35,8 +37,18 @@ public class JobSeekerProfileController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<Skills> skills = new ArrayList<Skills>();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            usersRepository.findByEmail(authentication.getName()).
+            Users user = usersRepository.findByEmail(authentication.getName()).
                     orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+            Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(user.getUserId());
+            if (seekerProfile.isPresent()) {
+                jobSeekerProfile = seekerProfile.get();
+                if (jobSeekerProfile.getSkills().isEmpty()) {
+                    skills.add(new Skills());
+                    jobSeekerProfile.setSkills(skills);
+                }
+            }
+            model.addAttribute("skills", skills);
+            model.addAttribute("profile", jobSeekerProfile);
         }
         return "job-seeker-profile";
     }
