@@ -72,13 +72,13 @@
 
         </ul>
 
-<!--        <img-->
-<!--                class="rounded-circle me-3"-->
-<!--                height="50px"-->
-<!--                width="50x"-->
-<!--                th:if="${user.photosImagePath!=null}"-->
-<!--                th:src="@{${user?.photosImagePath}}"-->
-<!--        />-->
+        <img
+                class="rounded-circle me-3"
+                height="50px"
+                width="50x"
+                th:if="${user.photosImagePath!=null}"
+                th:src="@{${user?.photosImagePath}}"
+        />
 
         <label th:if="${user.firstName != null && user.lastName != null}"
                th:text="${user.firstName+' '+user.lastName}"
