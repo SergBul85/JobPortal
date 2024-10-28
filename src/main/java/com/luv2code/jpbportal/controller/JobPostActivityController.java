@@ -1,10 +1,8 @@
 package com.luv2code.jpbportal.controller;
 
-import com.luv2code.jpbportal.entity.JobPostActivity;
-import com.luv2code.jpbportal.entity.RecruiterJobsDto;
-import com.luv2code.jpbportal.entity.RecruiterProfile;
-import com.luv2code.jpbportal.entity.Users;
+import com.luv2code.jpbportal.entity.*;
 import com.luv2code.jpbportal.services.JobPostActivityService;
+import com.luv2code.jpbportal.services.JobSeekerApplyService;
 import com.luv2code.jpbportal.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -13,12 +11,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -28,12 +28,15 @@ public class JobPostActivityController {
 
     private final UsersService usersService;
     private final JobPostActivityService jobPostActivityService;
+    private final JobSeekerApplyService jobSeekerApplyService;
 
     @Autowired
     public JobPostActivityController(UsersService usersService,
-                                     JobPostActivityService jobPostActivityService) {
+                                     JobPostActivityService jobPostActivityService,
+                                     JobSeekerApplyService jobSeekerApplyService) {
         this.usersService = usersService;
         this.jobPostActivityService = jobPostActivityService;
+        this.jobSeekerApplyService = jobSeekerApplyService;
     }
 
     @GetMapping("/dashboard/")
@@ -94,6 +97,13 @@ public class JobPostActivityController {
             type = false;
         }
 
+        if (!dateSearchFlag && !remote && !type && !StringUtils.hasText(job) && !StringUtils.hasText(location)) {
+            jobPost = jobPostActivityService.getAll();
+        } else {
+            jobPost = jobPostActivityService.search(job, location, Arrays.asList(partTime, fullTime, freelance),
+                    Arrays.asList(remoteOnly, officeOnly, partialRemote), searchDate);
+        }
+
         Object currentUserProfile = usersService.getCurrentUserProfile();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -104,6 +114,9 @@ public class JobPostActivityController {
                 List<RecruiterJobsDto> recruiterJobs = jobPostActivityService.getRecruiterJobs(((RecruiterProfile) currentUserProfile)
                         .getUserAccountId());
                 model.addAttribute("jobPost", recruiterJobs);
+            } else {
+                List<JobSeekerApply> jobSeekerApplyList =
+                        jobSeekerApplyService.getCandidatesJobs((JobSeekerProfile) currentUserProfile);
             }
         }
         model.addAttribute("user", currentUserProfile);
